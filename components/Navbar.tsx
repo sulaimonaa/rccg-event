@@ -7,8 +7,8 @@ const Navbar = () => {
                 <div className={"text-white text-lg font-bold"}>Business Service</div>
                 <nav className={"space-x-4"}>
                     <a href="#" className={"text-white hover:text-gray-300"}>Home</a>
-                    <a href="#" className={"text-white hover:text-gray-300"}>Business</a>
-                    <a href="#" className={"text-white hover:text-gray-300"}>Upload Business</a>
+                    <a href="#" className={"text-white hover:text-gray-300"}>Businesses</a>
+                    <a href="business/create" className={"text-white hover:text-gray-300"}>Upload Business</a>
                 </nav>
             </div>
         </div>

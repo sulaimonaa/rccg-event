@@ -38,9 +38,10 @@ export async function connectToDatabase(): Promise<Mongoose> {
     return cached.conn;
   }
 
-  if (!cached.promise) {
+    if (!cached.promise) {
+    // MONGODB_URI is validated above; use a non-null assertion to satisfy TS
     cached.promise = mongoose
-      .connect(MONGODB_URI, {
+      .connect(MONGODB_URI!, {
         bufferCommands: false,
       })
       .then((mongooseInstance) => mongooseInstance);
