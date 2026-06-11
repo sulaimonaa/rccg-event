@@ -65,8 +65,8 @@ async function handleSubmit(formData: FormData) {
 export default function CreateBusiness() {
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="max-w-2xl mx-auto p-6 text-white">
+            <div className="bg-white/10 shadow-lg rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-6">
                     Add Business
                 </h1>
@@ -81,7 +81,7 @@ export default function CreateBusiness() {
                             type="text"
                             name="business"
                             required
-                            className="w-full border rounded-lg p-3"
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
                             placeholder="ABC Technologies"
                         />
                     </div>
@@ -96,7 +96,7 @@ export default function CreateBusiness() {
                             name="image"
                             accept="image/*"
                             required
-                            className="w-full border rounded-lg p-3"
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
                         />
                     </div>
 
@@ -109,7 +109,7 @@ export default function CreateBusiness() {
                             type="text"
                             name="service"
                             required
-                            className="w-full border rounded-lg p-3"
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
                             placeholder="Web Development"
                         />
                     </div>
@@ -123,7 +123,7 @@ export default function CreateBusiness() {
                             type="text"
                             name="contact"
                             required
-                            className="w-full border rounded-lg p-3"
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
                             placeholder="+2348012345678"
                         />
                     </div>
@@ -137,7 +137,7 @@ export default function CreateBusiness() {
                             type="email"
                             name="email"
                             required
-                            className="w-full border rounded-lg p-3"
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
                             placeholder="info@business.com"
                         />
                     </div>

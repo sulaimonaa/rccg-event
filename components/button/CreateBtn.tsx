@@ -10,6 +10,7 @@ const CreateBtn = () => {
             type="submit"
             className="w-full bg-black/50 text-white py-3 rounded-lg hover:bg-black/60 hover:cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={loading}
+            onClick={() => isLoading(true)}
         >
             {loading ? "Creating business" : "Create Business"}
         </button>
