@@ -49,28 +49,45 @@ export async function GET() {
  // CREATE BUSINESS
 export async function POST(req: Request) {
     try {
-        await connectToDatabase();
+        // Add timeout for entire operation
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-        const body = await req.json();
+        try {
+            console.log("Connecting to database...");
+            await connectToDatabase();
+            console.log("✓ Database connected");
 
-        const business = await Business.create(body);
+            console.log("Parsing request body...");
+            const body = await req.json();
+            console.log("✓ Body parsed:", { ...body, image: "..." });
 
-         return NextResponse.json(
-             {
-                 success: true,
-                 data: business,
-             },
-             { status: 201, headers: corsHeaders }
-         );
-     } catch (error) {
-         // error is unknown in TypeScript catch clauses — normalize to a string message
-         const message = error instanceof Error ? error.message : String(error);
-         return NextResponse.json(
-             {
-                 success: false,
-                 message,
-             },
-             { status: 500, headers: corsHeaders }
-         );
-     }
+            console.log("Creating business...");
+            const business = await Business.create(body);
+            console.log("✓ Business created:", business._id);
+
+            clearTimeout(timeoutId);
+
+            return NextResponse.json(
+                {
+                    success: true,
+                    data: business,
+                },
+                { status: 201, headers: corsHeaders }
+            );
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    } catch (error) {
+        // error is unknown in TypeScript catch clauses — normalize to a string message
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("POST /api/businesses error:", message, error);
+        return NextResponse.json(
+            {
+                success: false,
+                message,
+            },
+            { status: 500, headers: corsHeaders }
+        );
+    }
  }

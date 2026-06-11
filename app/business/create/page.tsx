@@ -1,68 +1,120 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Business from "@/models/Business";
-import { redirect } from "next/navigation";
-import CreateBtn from "@/components/button/CreateBtn";
+'use client';
 
-async function handleSubmit(formData: FormData) {
-    "use server";
-
-    const business = formData.get("business") as string;
-    const imageFile = formData.get("image") as File | null;
-    const service = formData.get("service") as string;
-    const contact = formData.get("contact") as string;
-    const email = formData.get("email") as string;
-
-    if (!business || !service || !contact || !email) {
-        throw new Error("All required fields must be filled");
-    }
-
-    if (!imageFile || imageFile.size === 0) {
-        throw new Error("Please upload an image");
-    }
-
-    // Upload image to Cloudinary
-    let imageUrl = "";
-    try {
-        const fileFormData = new FormData();
-        fileFormData.append("file", imageFile);
-
-        const uploadResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/upload`,
-            {
-                method: "POST",
-                body: fileFormData,
-            }
-        );
-
-        if (!uploadResponse.ok) {
-            const error = await uploadResponse.json();
-            throw new Error(error.message || "Image upload failed");
-        }
-
-        const uploadResult = await uploadResponse.json();
-        imageUrl = uploadResult.url;
-    } catch (error) {
-        throw new Error(
-            error instanceof Error ? error.message : "Failed to upload image"
-        );
-    }
-
-    await connectToDatabase();
-
-    const newBusiness = await Business.create({
-        business,
-        image: imageUrl,
-        service,
-        contact,
-        email,
-    });
-
-    if (newBusiness) {
-        redirect("/");
-    }
-}
+import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateBusiness() {
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const formData = new FormData(e.currentTarget);
+            const business = formData.get("business") as string;
+            const imageFile = formData.get("image") as File | null;
+            const service = formData.get("service") as string;
+            const contact = formData.get("contact") as string;
+            const email = formData.get("email") as string;
+
+            // Validation
+            if (!business || !service || !contact || !email) {
+                throw new Error("All required fields must be filled");
+            }
+
+            if (!imageFile || imageFile.size === 0) {
+                throw new Error("Please upload an image");
+            }
+
+            // Upload image to Cloudinary with timeout
+            let imageUrl = "";
+            try {
+                const uploadFormData = new FormData();
+                uploadFormData.append("file", imageFile);
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+                const uploadResponse = await fetch("/api/upload", {
+                    method: "POST",
+                    body: uploadFormData,
+                    signal: controller.signal,
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!uploadResponse.ok) {
+                    const error = await uploadResponse.json();
+                    throw new Error(error.message || "Image upload failed");
+                }
+
+                const uploadResult = await uploadResponse.json();
+                imageUrl = uploadResult.url;
+                console.log("✓ Image uploaded successfully");
+            } catch (error) {
+                if (error instanceof Error && error.name === "AbortError") {
+                    throw new Error("Image upload timed out. Please check your connection and try again.");
+                }
+                throw new Error(
+                    error instanceof Error ? error.message : "Failed to upload image"
+                );
+            }
+
+            // Create business with timeout
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+                const response = await fetch("/api/businesses", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        business,
+                        image: imageUrl,
+                        service,
+                        contact,
+                        email,
+                    }),
+                    signal: controller.signal,
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.message || "Failed to create business");
+                }
+
+                console.log("✓ Business created successfully");
+                setSuccess(true);
+                // Reset form
+                e.currentTarget.reset();
+
+                // Redirect after success
+                setTimeout(() => {
+                    router.push("/");
+                }, 1500);
+            } catch (error) {
+                if (error instanceof Error && error.name === "AbortError") {
+                    throw new Error("Request timed out. The server is taking too long to respond. Please try again.");
+                }
+                throw error;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+            console.error("Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-2xl mx-auto p-6 text-white">
@@ -71,7 +123,19 @@ export default function CreateBusiness() {
                     Add Business
                 </h1>
 
-                <form action={handleSubmit} className="space-y-4">
+                {error && (
+                    <div className="mb-4 p-4 bg-red-500/20 border border-red-500 rounded-lg text-red-200">
+                        {error}
+                    </div>
+                )}
+
+                {success && (
+                    <div className="mb-4 p-4 bg-green-500/20 border border-green-500 rounded-lg text-green-200">
+                        Business created successfully! Redirecting...
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Business Name */}
                     <div>
                         <label className="block mb-1 font-medium">
@@ -81,7 +145,8 @@ export default function CreateBusiness() {
                             type="text"
                             name="business"
                             required
-                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
+                            disabled={loading}
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="ABC Technologies"
                         />
                     </div>
@@ -96,7 +161,8 @@ export default function CreateBusiness() {
                             name="image"
                             accept="image/*"
                             required
-                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
+                            disabled={loading}
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                     </div>
 
@@ -109,7 +175,8 @@ export default function CreateBusiness() {
                             type="text"
                             name="service"
                             required
-                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
+                            disabled={loading}
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="Web Development"
                         />
                     </div>
@@ -123,7 +190,8 @@ export default function CreateBusiness() {
                             type="text"
                             name="contact"
                             required
-                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
+                            disabled={loading}
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="+2348012345678"
                         />
                     </div>
@@ -137,12 +205,19 @@ export default function CreateBusiness() {
                             type="email"
                             name="email"
                             required
-                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300"
+                            disabled={loading}
+                            className="w-full bg-black/50 rounded-lg p-3 placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="info@business.com"
                         />
                     </div>
 
-                    <CreateBtn />
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-black/50 text-white py-3 rounded-lg hover:bg-black/60 hover:cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+                    >
+                        {loading ? "Creating business..." : "Create Business"}
+                    </button>
                 </form>
             </div>
         </div>
