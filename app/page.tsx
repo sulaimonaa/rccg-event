@@ -2,6 +2,7 @@ import ExploreBtn from "@/components/button/ExploreBtn";
 import BusinessCard from "@/components/BusinessCard";
 import {connectToDatabase} from "@/lib/mongodb";
 import Business from "@/models/Business";
+import {FaCableCar} from "react-icons/fa6";
 interface IBusinessData {
     _id: string;
     business: string;
@@ -32,9 +33,11 @@ export default async function Home() {
 
               <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Welcome to Business Service</h1>
               <p className={"text-lg mb-6 text-center text-white"}>
-                Connect with business minds that evolve. Upload your business and discover new opportunities.<br/>
-                  Happening on Sunday, 28th June, 2026 from 9:00AM
+                Connect with business minds that evolve. Upload your business and discover new opportunities.
               </p>
+                <div className={"flex items-center justify-center gap-2 text-white"}>
+                    <FaCableCar /> Happening on Sunday, 28th June, 2026 from 9:00AM
+                </div>
                 <div className={'mt-7 mx-auto w-full lg:w-2/5 text-center'}>
                 <ExploreBtn />
                 </div>
