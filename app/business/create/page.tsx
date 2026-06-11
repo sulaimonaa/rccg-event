@@ -1,13 +1,25 @@
 'use client';
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CreateBusiness() {
     const router = useRouter();
+    const formRef = useRef<HTMLFormElement>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+
+    // Handle redirect after success
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => {
+                console.log("Redirecting to home...");
+                router.push("/");
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [success, router]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -94,14 +106,11 @@ export default function CreateBusiness() {
                 }
 
                 console.log("✓ Business created successfully");
+                if (formRef.current) {
+                    formRef.current.reset();
+                    console.log("✓ Form reset");
+                }
                 setSuccess(true);
-                // Reset form
-                e.currentTarget.reset();
-
-                // Redirect after success
-                setTimeout(() => {
-                    router.push("/");
-                }, 1500);
             } catch (error) {
                 if (error instanceof Error && error.name === "AbortError") {
                     throw new Error("Request timed out. The server is taking too long to respond. Please try again.");
@@ -135,7 +144,7 @@ export default function CreateBusiness() {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4" ref={formRef}>
                     {/* Business Name */}
                     <div>
                         <label className="block mb-1 font-medium">
