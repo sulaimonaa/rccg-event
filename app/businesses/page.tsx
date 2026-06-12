@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Image from "next/image";
 import { connectToDatabase } from "@/lib/mongodb";
 import Business from "@/models/Business";
