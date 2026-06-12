@@ -32,11 +32,11 @@ export default async function Home() {
       <section>
         <div className={"lg:w-10/12 container mx-auto px-4 py-8"}>
 
-              <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Welcome to Entrepreneurship Service</h1>
+              <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Entrepreneurship Service</h1>
               <p className={"text-lg mb-6 text-center text-white"}>
-                Connect with business minds that evolve. Upload your business and discover new opportunities.
+                Connect with business minds that evolve. Add your business info to increase visibility, use as an event backdrop, and discover new opportunities.
               </p>
-                <div className={"flex items-center justify-center gap-2 text-white"}>
+                <div className={"flex flex-col md:flex-row items-center justify-center gap-2 text-white text-center"}>
                     <FaCableCar /> Happening on Sunday, 28th June, 2026 from 9:00AM
                 </div>
                 <div className={'mt-7 mx-auto w-full lg:w-2/5 text-center'}>

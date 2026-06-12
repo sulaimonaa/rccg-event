@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import {FaBuilding, FaEnvelopeOpen, FaUserCircle} from "react-icons/fa";
-import {FaPhoneFlip} from "react-icons/fa6";
+import {FaBuilding, FaEnvelopeOpen, FaUserCircle, FaWhatsapp} from "react-icons/fa";
 
 interface Props {
     business: string,
@@ -20,7 +19,7 @@ const BusinessCard = ({business, image, service, contact, email}: Props) => {
             <div className={'p-4 '}>
                 <h2 className={"text-xl font-bold mb-2 text-white flex items-center justify-start gap-2"}><FaUserCircle />{business}</h2>
                 <p className={"text-gray-400 mb-1 flex items-center justify-start gap-2"}><FaBuilding /> {service}</p>
-                <p className={"text-gray-400 mb-1 flex items-center justify-start gap-2"}><FaPhoneFlip /> {contact}</p>
+                <p className={"text-gray-400 mb-1 flex items-center justify-start gap-2"}><FaWhatsapp /> {contact}</p>
                 <p className={"text-gray-400 flex items-center justify-start gap-2"}><FaEnvelopeOpen /> {email}</p>
             </div>
         </Link>

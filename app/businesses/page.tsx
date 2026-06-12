@@ -64,7 +64,7 @@ export default async function BusinessesPage() {
                                                 rel="noopener noreferrer"
                                                 className="text-blue-600 hover:underline"
                                             >
-                                            <Image src={business.image} alt={business.business} fill className="object-cover" sizes="80px" />
+                                            <Image src={business.image} alt={business.business} fill className="relative object-cover" sizes="80px" />
                                             </a>
                                         </div>
                                     ) : (
