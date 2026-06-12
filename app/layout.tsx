@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Business Service: Building Solutions from the Kingdom House",
+  title: "Entrepreneurship Service: Building Solutions from the Kingdom House",
   description: "Connecting business minds that evolve",
 };
 

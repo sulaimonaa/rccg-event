@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ExploreBtn from "@/components/button/ExploreBtn";
 import BusinessCard from "@/components/BusinessCard";
 import {connectToDatabase} from "@/lib/mongodb";
@@ -31,7 +32,7 @@ export default async function Home() {
       <section>
         <div className={"lg:w-10/12 container mx-auto px-4 py-8"}>
 
-              <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Welcome to Business Service</h1>
+              <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Welcome to Entrepreneurship Service</h1>
               <p className={"text-lg mb-6 text-center text-white"}>
                 Connect with business minds that evolve. Upload your business and discover new opportunities.
               </p>
@@ -45,7 +46,7 @@ export default async function Home() {
                 <h2 className={"text-3xl font-bold mb-6 text-start text-white"}>Featured Businesses</h2>
                 <div className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"}>
                   {businesses.map((business: IBusinessData) => (
-                      <BusinessCard key={business.business} {...business} />
+                      <BusinessCard key={business._id} {...business} />
                   ))}
                 </div>
               </div>
