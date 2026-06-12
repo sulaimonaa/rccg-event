@@ -33,7 +33,7 @@ export default async function Home() {
         <div className={"lg:w-10/12 container mx-auto px-4 py-8"}>
 
               <h1 className={"text-4xl font-bold mt-8 mb-8 text-center text-white"}>Entrepreneurship Service</h1>
-              <p className={"text-lg mb-6 text-center text-white w-full md:w-4/5 lg:w-8/12"}>
+              <p className={"text-lg mb-6 text-center text-white w-full md:w-4/5 lg:w-8/12 mx-auto"}>
                 Connect with business minds that evolve. Add your business info to increase visibility, use as an event backdrop, and discover new opportunities.
               </p>
                 <div className={"flex flex-col md:flex-row items-center justify-center gap-2 text-white text-center"}>
