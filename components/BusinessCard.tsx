@@ -12,7 +12,7 @@ interface Props {
 
 const BusinessCard = ({business, image, service, contact, email}: Props) => {
     return (
-        <Link href={`/business/${business}`} className={"flex flex-col items-center bg-cyan-950/20 rounded-b-lg"}>
+        <Link href={image} className={"flex flex-col items-center bg-cyan-950/20 rounded-b-lg"}>
             <div className={"w-full bg-white flex items-center justify-center h-50 overflow-hidden rounded-t-lg"}>
                 <Image src={image} alt={`${business} logo`} className={"mb-4 rounded-lg object-cover bg-white w-full"} width={400} height={200} />
             </div>

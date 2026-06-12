@@ -126,7 +126,7 @@ export default function CreateBusiness() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6 text-white">
+        <div className="max-w-2xl mx-auto p-6 text-white min-h-screen">
             <div className="bg-white/10 shadow-lg rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-6">
                     Add Business

@@ -37,7 +37,7 @@ export default async function BusinessesPage() {
     }
 
     return (
-        <div className="max-w-6xl lg:w-10/12 mx-auto p-6">
+        <div className="max-w-6xl lg:w-10/12 mx-auto p-6 min-h-screen">
             <h1 className="text-3xl font-bold mb-6 text-white"></h1>
 
             <div className="overflow-x-auto bg-black/50 shadow rounded">
